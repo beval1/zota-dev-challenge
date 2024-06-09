@@ -1,0 +1,175 @@
+basePath: /api/v1
+definitions:
+  deposit.ClientRequest:
+    properties:
+      customerAddress:
+        type: string
+      customerBankCode:
+        type: string
+      customerCity:
+        type: string
+      customerCountryCode:
+        type: string
+      customerEmail:
+        type: string
+      customerFirstName:
+        type: string
+      customerLastName:
+        type: string
+      customerPhone:
+        type: string
+      customerState:
+        type: string
+      customerZipCode:
+        type: string
+      orderAmount:
+        type: string
+      orderCurrency:
+        type: string
+      userId:
+        type: string
+    type: object
+  zota.Data:
+    properties:
+      amount:
+        type: string
+      currency:
+        type: string
+      customParam:
+        type: string
+      customerEmail:
+        type: string
+      endpointID:
+        type: string
+      errorMessage:
+        type: string
+      extraData:
+        $ref: '#/definitions/zota.ExtraData'
+      merchantOrderID:
+        type: string
+      orderID:
+        type: string
+      processorTransactionID:
+        type: string
+      request:
+        $ref: '#/definitions/zota.StatusRequest'
+      status:
+        type: string
+      type:
+        type: string
+    type: object
+  zota.DepositResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/zota.DepositResponseData'
+      message:
+        type: string
+    type: object
+  zota.DepositResponseData:
+    properties:
+      depositUrl:
+        type: string
+      merchantOrderID:
+        type: string
+      orderID:
+        type: string
+    type: object
+  zota.ExtraData:
+    properties:
+      amountChanged:
+        type: boolean
+      amountManipulated:
+        type: boolean
+      amountRounded:
+        type: boolean
+      dcc:
+        type: boolean
+      originalAmount:
+        type: string
+      paymentMethod:
+        type: string
+      selectedBankCode:
+        type: string
+      selectedBankName:
+        type: string
+    type: object
+  zota.StatusRequest:
+    properties:
+      merchantID:
+        type: string
+      merchantOrderID:
+        type: string
+      orderID:
+        type: string
+      signature:
+        type: string
+      timestamp:
+        type: string
+    type: object
+  zota.StatusResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/zota.Data'
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a simple merchant's server implementing Zota payment gateway.
+  title: Merchant Server
+  version: "1.0"
+paths:
+  /deposit:
+    post:
+      consumes:
+      - application/json
+      description: handle deposit
+      parameters:
+      - description: Deposit Request
+        in: body
+        name: depositRequest
+        required: true
+        schema:
+          $ref: '#/definitions/deposit.ClientRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deposit Successful
+          schema:
+            $ref: '#/definitions/zota.DepositResponse'
+      summary: deposit example
+      tags:
+      - deposit
+  /status:
+    get:
+      consumes:
+      - application/json
+      description: handle status check
+      parameters:
+      - description: Order ID
+        in: query
+        name: orderId
+        required: true
+        type: string
+      - description: Merchant Order ID
+        in: query
+        name: merchantOrderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status Check successful
+          schema:
+            $ref: '#/definitions/zota.StatusResponse'
+      summary: status check example
+      tags:
+      - status check
+swagger: "2.0"
